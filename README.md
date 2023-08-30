@@ -54,7 +54,11 @@ Before you begin, make sure you have the following:
    node server.js
    ```
 
-2. The API server will start running, and you'll see output indicating the server is up and listening.
+2. The API server will start running, and you'll see output indicating the server is up and listening. And in the browser open following URL
+
+    ```bash
+     http://localhost:8080/
+     ```
 
 ## Contributing
 
