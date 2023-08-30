@@ -4,20 +4,6 @@ http.listen(8080); //listen to port 8080
 const fs      = require('fs'); //require filesystem module
 const io      = require('socket.io')(http) //require socket.io module and pass the http object (server)
 
-const gpio    = require('onoff').Gpio;
-const relays  = [
-    new gpio(10, 'out'),
-    new gpio(11, 'out'),
-    new gpio(12, 'out'),
-    new gpio(13, 'out'),
-    new gpio(14, 'out'),
-    new gpio(15, 'out'),
-];
-
-const allRelaysOff = () => {
-    relays.forEach(relay => relay.writeSync(0));
-};
-
 // Create a web server and listen on 8080.
 function handler(req, res)
 {
@@ -35,20 +21,17 @@ function handler(req, res)
 io.sockets.on('connection', function (socket) {// WebSocket Connection
 
     socket.on('light', function (data) { //get light switch status from client
-
-        const dataParts     = data.split('-');
+	
+        const dataParts     = data.split('_');
         const relayNumber   = dataParts[0];
         const relayValue    = dataParts[1];
-        relays[(relayNumber - 1)].writeSync(relayValue);
+
+        console.log('Relay ' + relayNumber +' : '+ (relayValue == 1 ? 'On' : 'Off'));        
     });
 });
 
-// Turn off all relays on start up.
-allRelaysOff();
-
 // Handle Ctrl+C exit cleanly by turning off all relays.
 process.on('SIGINT', () => {
-
-    allRelaysOff();
+    
     process.exit();
 });
